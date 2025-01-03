@@ -51,39 +51,70 @@ To test:
 
 1. Find Movies in the "Family" Genre with a Rating Above 8.0
 
-
+from Q2.models import Movie
+from django.db.models import Q
+# Query
 movies = Movie.objects.filter(Q(genre="Family") & Q(rating__gt=8.0))
 for movie in movies:
     print(f"Title: {movie.title}, Rating: {movie.rating}, Genre: {movie.genre}")
 
+Results:
+Title: Frozen, Rating: 8.3, Genre: Family
+Title: Sprited Away, Rating: 8.6, Genre: Family
+Title: Spider-Man: Across the Spider-Verse, Rating: 8.5, Genre: Family
 
 2. Find Movies with a Rating Below 7.5
 
-
+from Q2.models import Movie
+from django.db.models import Q
 movies = Movie.objects.filter(Q(rating__lt=7.5))
 for movie in movies:
     print(f"Title: {movie.title}, Rating: {movie.rating}, Genre: {movie.genre}")
 
+Results:
+Title: Cars, Rating: 7.3, Genre: Family
+Title: It, Rating: 7.3, Genre: Horror
+Title: Smile, Rating: 6.5, Genre: Horror
+
 3. Find "Horror" Movies OR Movies with a Rating Above 8.0
 
-
+from Q2.models import Movie
+from django.db.models import Q
 movies = Movie.objects.filter(Q(genre="Horror") | Q(rating__gt=8.0))
 for movie in movies:
     print(f"Title: {movie.title}, Rating: {movie.rating}, Genre: {movie.genre}")
 
-Exclude Movies in the "Family" Genre
+Results:
+Title: Frozen, Rating: 8.3, Genre: Family
+Title: It, Rating: 7.3, Genre: Horror
+Title: Smile, Rating: 6.5, Genre: Horror
+Title: Sprited Away, Rating: 8.6, Genre: Family
+Title: Spider-Man: Across the Spider-Verse, Rating: 8.5, Genre: Family
 
 
-4. movies = Movie.objects.filter(~Q(genre="Family"))
+4. Exclude Movies in the "Family" Genre
+
+from Q2.models import Movie
+from django.db.models import Q
+movies = Movie.objects.filter(~Q(genre="Family"))
 for movie in movies:
     print(f"Title: {movie.title}, Rating: {movie.rating}, Genre: {movie.genre}")
+
+Results:
+Title: It, Rating: 7.3, Genre: Horror
+Title: Smile, Rating: 6.5, Genre: Horror
+
 
 5. Find Movies with Titles Containing the Word "Spider" (Case-Insensitive)
 
-
+from Q2.models import Movie
+from django.db.models import Q
 movies = Movie.objects.filter(Q(title__icontains="spider"))
 for movie in movies:
     print(f"Title: {movie.title}, Rating: {movie.rating}, Genre: {movie.genre}")
+
+Results:
+Title: Spider-Man: Across the Spider-Verse, Rating: 8.5, Genre: Family
 
 Q3.
 So in order to set up the app on AWS EC2, first I’d use a free-tier 
