@@ -85,3 +85,11 @@ movies = Movie.objects.filter(Q(title__icontains="spider"))
 for movie in movies:
     print(f"Title: {movie.title}, Rating: {movie.rating}, Genre: {movie.genre}")
 
+Q3.
+So in order to set up the app on AWS EC2, first I’d use a free-tier 
+instance like t2.micro, which is really good for small-scale projects. I’d 
+choose an AWS region that is close to my target demographic to 
+minimize latency. I would also use Amazon RDS free tier for small 
+databases, and I would also enable auto start and stop to schedule 
+shutdowns during non-peak hours. I’m sure that doing this would help
+minimize costs.
