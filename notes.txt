@@ -1,0 +1,87 @@
+Q1:
+
+Test select_related
+Run this to fetch movies and their studios efficiently in a single query:
+
+from Q1.models import Movie
+
+# Query with select_related
+movies = Movie.objects.select_related('studio')
+for movie in movies:
+    print(f"Movie: {movie.title}, Studio: {movie.studio.name}")
+
+Results:
+Movie: Sonic, Studio: Paramount
+Movie: Avengers, Studio: Marvel
+Movie: Thor, Studio: Marvel
+Movie: Cars, Studio: Disney
+Movie: Moana, Studio: Disney
+Movie: Cinderella, Studio: Disney
+
+Conclusion:
+You use single_related when you want to fetch a product and it's category in one query which is good for better performance.
+A real world example would be a blog post and it's authors. You don't want to see all of an author's blog posts at once, so it's best to show 1 blog post and the author 1 by 1.
+
+Test prefetch_related
+Run this to fetch studios and their related movies efficiently:
+
+from Q1.models import Studio
+
+# Query with prefetch_related
+studios = Studio.objects.prefetch_related('movies')
+for studio in studios:
+    movies = studio.movies.all()  # Access pre-fetched movies
+    print(f"Studio: {studio.name}, Movies: {[movie.title for movie in movies]}")
+
+Results:
+Studio: Marvel, Movies: ['Avengers', 'Thor']
+Studio: Disney, Movies: ['Cars', 'Moana', 'Cinderella']
+Studio: Paramount, Movies: ['Sonic']
+
+Conclusion:
+You use prefetch_related when you want to display the category with all of the products listed. So where multiple related objects exist per main object,
+like how a studio can have multiple movies under their name.
+
+
+Q2:
+
+Q objects are used to make complex queries that use logical operators OR AND NOT. They are useful when combining queries with different conditions.
+
+To test:
+
+1. Find Movies in the "Family" Genre with a Rating Above 8.0
+
+
+movies = Movie.objects.filter(Q(genre="Family") & Q(rating__gt=8.0))
+for movie in movies:
+    print(f"Title: {movie.title}, Rating: {movie.rating}, Genre: {movie.genre}")
+
+
+2. Find Movies with a Rating Below 7.5
+
+
+movies = Movie.objects.filter(Q(rating__lt=7.5))
+for movie in movies:
+    print(f"Title: {movie.title}, Rating: {movie.rating}, Genre: {movie.genre}")
+
+3. Find "Horror" Movies OR Movies with a Rating Above 8.0
+
+
+movies = Movie.objects.filter(Q(genre="Horror") | Q(rating__gt=8.0))
+for movie in movies:
+    print(f"Title: {movie.title}, Rating: {movie.rating}, Genre: {movie.genre}")
+
+Exclude Movies in the "Family" Genre
+
+
+4. movies = Movie.objects.filter(~Q(genre="Family"))
+for movie in movies:
+    print(f"Title: {movie.title}, Rating: {movie.rating}, Genre: {movie.genre}")
+
+5. Find Movies with Titles Containing the Word "Spider" (Case-Insensitive)
+
+
+movies = Movie.objects.filter(Q(title__icontains="spider"))
+for movie in movies:
+    print(f"Title: {movie.title}, Rating: {movie.rating}, Genre: {movie.genre}")
+
